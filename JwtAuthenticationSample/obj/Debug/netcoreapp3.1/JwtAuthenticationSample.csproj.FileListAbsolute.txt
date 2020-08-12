@@ -93,4 +93,3 @@ D:\wwwroot\JwtAuthenticationSample\JwtAuthenticationSample\bin\Debug\netcoreapp3
 D:\wwwroot\JwtAuthenticationSample\JwtAuthenticationSample\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 D:\wwwroot\JwtAuthenticationSample\JwtAuthenticationSample\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 D:\wwwroot\JwtAuthenticationSample\JwtAuthenticationSample\obj\Debug\netcoreapp3.1\JwtAuthenticationSample.MvcApplicationPartsAssemblyInfo.cache
-D:\wwwroot\JwtAuthenticationSample\JwtAuthenticationSample\obj\Debug\netcoreapp3.1\JwtAuthenticationSample.csprojAssemblyReference.cache

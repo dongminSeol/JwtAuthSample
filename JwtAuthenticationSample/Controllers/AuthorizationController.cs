@@ -19,7 +19,7 @@ namespace JwtAuthenticationSample.Controllers
         [HttpPost]
         [Route("signin")]
         [AllowAnonymous]
-        public IActionResult LoginUser([FromBody] LoginUserBindingModel loginUserModel)
+        public IActionResult LoginUser([FromBody] LoginUserBindingModel loginUserModel) 
         {
 
 

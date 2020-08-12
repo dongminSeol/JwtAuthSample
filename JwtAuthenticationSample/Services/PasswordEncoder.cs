@@ -14,7 +14,7 @@ namespace JwtAuthenticationSample.Services
             using (var sha256 = SHA256.Create())
             {
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(passStr));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower(); 
             }
         }
 

@@ -13,3 +13,4 @@ namespace JwtAuthenticationSample
         public string Summary { get; set; }
     }
 }
+ 

@@ -11,7 +11,7 @@ namespace JwtAuthenticationSample.Services
     public class JwtManager
     {
 
-        private static readonly string Secret = "856FECBA3B06519C8DDDBC80BB080553";
+        private static readonly string Secret = "856FECBA3B06519C8DDDBC80BB080553"; 
 
         /// <summary>
         /// 토큰 생성
