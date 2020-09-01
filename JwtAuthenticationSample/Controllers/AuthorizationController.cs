@@ -14,6 +14,12 @@ namespace JwtAuthenticationSample.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
+        private IUserData _userData;
+
+        public AuthorizationController(IUserData userData)
+        {
+            _userData = userData;
+        }
 
         // POST /api/account/signin
         [HttpPost]
@@ -23,22 +29,20 @@ namespace JwtAuthenticationSample.Controllers
         {
 
 
-            //저장소에서 
-            string admin_name = "admin";
-            string admin_password = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
-
+            /* 테스트 기본 정보
+               아이디 : Admin
+               암호   : Admin */
             try
             {
-                if (loginUserModel != null &&
-                    admin_name     == loginUserModel.UserName &&
-                    admin_password == PasswordEncoder.Encode(loginUserModel.Password))
-                {
+                var user = _userData.GetByUser(loginUserModel.UserName, PasswordEncoder.Encode(loginUserModel.Password));
 
+                if (user != null && user.PasswordHash == PasswordEncoder.Encode(loginUserModel.Password))
+                {
                     return Ok(new
                     {
-                        Token    = JwtManager.GenerateToken(loginUserModel.UserName, loginUserModel.Password),
-                        UserName = loginUserModel.UserName,
-                        Password = PasswordEncoder.Encode(loginUserModel.Password)
+                        token = JwtManager.GenerateToken(loginUserModel.UserName, loginUserModel.Password),
+                        username = loginUserModel.UserName,
+                        passwordhash = PasswordEncoder.Encode(loginUserModel.Password)
                     });
                 }
 
