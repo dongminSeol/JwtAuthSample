@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using JwtAuthenticationSample.JwtHelpers;
 using JwtAuthenticationSample.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace JwtAuthenticationSample
 {
@@ -23,16 +17,18 @@ namespace JwtAuthenticationSample
          
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // 이 방법은 런타임에 의해 호출된다. 컨테이너에 서비스를 추가하려면 이 방법을 사용.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            // 테스트 용 사용자 정보 맵핑 입니다.
+            // App 설정 값
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            // 테스트 용 사용자 정보 .
             services.AddScoped<IUserData, UserData>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // 이 방법은 런타임에 의해 호출된다. 이 방법을 사용하여 HTTP 요청 파이프라인을 구성.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -40,11 +36,15 @@ namespace JwtAuthenticationSample
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //SSL 주석
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //파이프라인 Jwt 미들웨어 Class 추가.
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
