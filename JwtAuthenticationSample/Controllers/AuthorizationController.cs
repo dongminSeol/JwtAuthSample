@@ -25,7 +25,7 @@ namespace JwtAuthenticationSample.Controllers
         [HttpPost]
         [Route("signin")]
         [AllowAnonymous]
-        public IActionResult LoginUser([FromBody] LoginUserBindingModel loginUserModel) 
+        public IActionResult LoginUser([FromBody] LoginUserBindingModel model) 
         {
 
 
@@ -34,15 +34,15 @@ namespace JwtAuthenticationSample.Controllers
                암호   : Admin */
             try
             {
-                var user = _userData.GetByUser(loginUserModel.UserName, PasswordEncoder.Encode(loginUserModel.Password));
+                var user = _userData.GetByUser(model.UserName, PasswordEncoder.Encode(model.Password));
 
-                if (user != null && user.PasswordHash == PasswordEncoder.Encode(loginUserModel.Password))
+                if (user != null && user.PasswordHash == PasswordEncoder.Encode(model.Password))
                 {
                     return Ok(new
                     {
-                        token = JwtManager.GenerateToken(loginUserModel.UserName, loginUserModel.Password),
-                        username = loginUserModel.UserName,
-                        passwordhash = PasswordEncoder.Encode(loginUserModel.Password)
+                        token = _userData.GenerateToken(model.UserName, model.Password),
+                        username = model.UserName,
+                        passwordhash = PasswordEncoder.Encode(model.Password)
                     });
                 }
 
@@ -66,7 +66,7 @@ namespace JwtAuthenticationSample.Controllers
 
             return Ok(new
             {
-                Token = JwtManager.GenerateToken(admin_name, "admin"),
+                Token = _userData.GenerateToken(admin_name, "admin"),
                 UserName = "관리자",
                 Password = admin_password
             });

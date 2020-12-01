@@ -1,8 +1,12 @@
-﻿using JwtAuthenticationSample.Models;
+﻿using JwtAuthenticationSample.JwtHelpers;
+using JwtAuthenticationSample.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace JwtAuthenticationSample.Services
 {
@@ -10,10 +14,18 @@ namespace JwtAuthenticationSample.Services
     {
         User GetByUser(string userName);
         User GetByUser(string userName, string passwordHash);
+        string GenerateToken(string userName, string passWordHash, int expireHours = 1);
     }
 
     public class UserData : IUserData
     {
+        private readonly AppSettings _appSettings;
+
+        public UserData(IOptions<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
+        }
+
         private List<User> _users = new List<User>
         {
             new User
@@ -51,5 +63,29 @@ namespace JwtAuthenticationSample.Services
             return _users.FirstOrDefault(t => t.UserName == userName && t.PasswordHash == passwordHash);
         }
 
+        public string GenerateToken(string userName, string passWordHash, int expireHours = 1)
+        {
+            var symmetricKey = Convert.FromBase64String(_appSettings.Secret.ToString());
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var now = DateTime.UtcNow;
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Expires = now.AddHours(Convert.ToInt32(expireHours)),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature),
+
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, userName),
+                    new Claim(ClaimTypes.Hash, passWordHash)
+                })
+            };
+
+            var stoken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(stoken);
+
+            return token;
+
+        }
     }
 }
